@@ -14,7 +14,6 @@ public class Manager {
     private HashMap<Integer, Subtask> subtaskHashMap = new HashMap<>();
     private HashMap<Integer, Epic> epicHashMap = new HashMap<>();
     private HashMap<Integer, Task> allTasksHashMap = new HashMap<>();
-    private ArrayList<Task> allTaskList = new ArrayList<>();
 
     public int createNewTask(Task task) {
         task.setId(id++);
@@ -63,12 +62,15 @@ public class Manager {
         return list;
     }
 
-    public List<Task> deleteAllTasks() {
+    public boolean deleteAllTasks() {
+        if (allTasksHashMap.isEmpty()) {
+            return false;
+        }
         allTasksHashMap.clear();
         taskHashMap.clear();
         epicHashMap.clear();
         subtaskHashMap.clear();
-        return allTaskList;
+        return true;
     }
 
     public boolean deleteTaskById(int id) {
