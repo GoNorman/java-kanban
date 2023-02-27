@@ -1,10 +1,16 @@
-package ru.yandex.kanban.module;
+package ru.yandex.kanban.model;
 
 public class Task {
     protected int id;
     protected String name;
     protected String description;
     protected String status;
+
+    public Task(String newName, String newDescription) {
+        this.name = newName;
+        this.description = newDescription;
+    }
+
     public String getName() {
         return name;
     }
