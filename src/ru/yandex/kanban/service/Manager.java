@@ -39,9 +39,10 @@ public class Manager {
         Epic epic = getEpicById(subtask.getEpicId());
         List<Subtask> subtaskList = epic.getSubtaskList();
         subtaskList.add(subtask);
-        if (getEpicById(epic.getId()).getStatus().equals("DONE")) {
-            epic.setStatus("NEW");
-        }
+        updateStatusEpic(subtask.getEpicId());
+//        if (getEpicById(epic.getId()).getStatus().equals("DONE")) {
+//            epic.setStatus("NEW");
+//        }
         return subtask.getId();
     }
 
@@ -53,13 +54,28 @@ public class Manager {
         return epicHashMap.get(epicId);
     }
 
-    public Subtask getSubtaskId(int subtaskId) {
+    public Subtask getSubtaskById(int subtaskId) {
         return subtaskHashMap.get(subtaskId);
     }
 
     public List<Task> getAllTasks() {
         List<Task> list = new ArrayList<>(allTasksHashMap.values());
         return list;
+    }
+
+    public List<Task> getAllTask() {
+        List<Task> taskList= new ArrayList<>(taskHashMap.values());
+        return taskList;
+    }
+
+    public List<Epic> getAllEpic() {
+        List<Epic> epicList = new ArrayList<>(epicHashMap.values());
+        return epicList;
+    }
+
+    public List<Subtask> getAllSubtask() {
+        List<Subtask> subtaskList = new ArrayList<>(subtaskHashMap.values());
+        return subtaskList;
     }
 
     public boolean deleteAllTasks() {
@@ -100,8 +116,9 @@ public class Manager {
     public boolean deleteSubtaskById(int id) {
         if (subtaskHashMap.get(id) != null) {
             Epic epic = epicHashMap.get(subtaskHashMap.get(id).getEpicId());
-            epic.getSubtaskList().remove(getSubtaskId(id));
-            allTasksHashMap.remove(getSubtaskId(id).getId());
+            epic.getSubtaskList().remove(getSubtaskById(id));
+            allTasksHashMap.remove(getSubtaskById(id).getId());
+            updateStatusEpic(getSubtaskById(id).getEpicId());
             return true;
         }
         return false;
@@ -125,22 +142,23 @@ public class Manager {
     public boolean updateSubtask(Subtask subtask) {
         if (subtaskHashMap.get(subtask.getId()) != null) {
             subtaskHashMap.replace(subtask.getId(), subtask);
-            updateStatusEpic(subtask); //Check method for Epic. Check subtask of epic.
+            updateStatusEpic(subtask.getEpicId()); //Check method for Epic. Check subtask of epic.
         }
         return false;
     }
 
     public List<Subtask> getSubtaskListFromEpic(int id) {
         if (epicHashMap.get(id) == null) {
-            return null;
+            List<Subtask> subtaskList = new ArrayList<>();
+            return subtaskList;
         }
         Epic epic = epicHashMap.get(id);
         return epic.getSubtaskList();
     }
 
 
-    public boolean updateStatusTask(Task task) {
-        if (taskHashMap.get(task.getId()) == null) {
+    public boolean updateStatusTask(Task task) { // Не совсем понял комментарий) Надо объеденить методы updateStatusTask и updateStatusSubtask
+        if (taskHashMap.get(task.getId()) == null) {// в один метод или эти методы надо вызывать в методах updateTask и updateSubtask?)
             return false;
         }
         TrackerStatus.changeStatus(task); /// Maybe it's not right and don't use static method from a different class
@@ -156,11 +174,11 @@ public class Manager {
         return true;
     }
 
-    private boolean updateStatusEpic(Subtask subtask) {
-        if (epicHashMap.get(subtask.getEpicId()) == null) {
+    private boolean updateStatusEpic(int epicId) {
+        if (epicHashMap.get(epicId) == null) {
             return false;
         }
-        Epic epic = epicHashMap.get(subtask.getEpicId());
+        Epic epic = epicHashMap.get(epicId);
         List<Subtask> subtaskList = epic.getSubtaskList();
         int taskInProgress = 0;
         int taskDoneCount = 0;

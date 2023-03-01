@@ -3,9 +3,6 @@ import ru.yandex.kanban.model.Subtask;
 import ru.yandex.kanban.model.Task;
 import ru.yandex.kanban.service.Manager;
 
-import java.util.Formattable;
-import java.util.List;
-
 public class Main {
     public static void main(String[] args) {
         Manager manager = new Manager();
@@ -19,14 +16,14 @@ public class Main {
         manager.updateStatusTask(manager.getTaskById(task1));
         manager.updateStatusTask(manager.getTaskById(task1));
         manager.updateStatusTask(manager.getTaskById(task2));
-        manager.updateStatusSubtask(manager.getSubtaskId(subTask1));
-        manager.updateStatusSubtask(manager.getSubtaskId(subTask1));
-        manager.updateStatusSubtask(manager.getSubtaskId(subTask2));
-        manager.updateStatusSubtask(manager.getSubtaskId(subTask2));
+        manager.updateStatusSubtask(manager.getSubtaskById(subTask1));
+        manager.updateStatusSubtask(manager.getSubtaskById(subTask1));
+        manager.updateStatusSubtask(manager.getSubtaskById(subTask2));
+        manager.updateStatusSubtask(manager.getSubtaskById(subTask2));
         int subtask4 = manager.createNewSubTask(new Subtask("Fourth Subtask", "4", 2));
-        manager.updateStatusSubtask(manager.getSubtaskId(subtask4));
-        manager.updateStatusSubtask(manager.getSubtaskId(subtask4));
-        manager.deleteSubtaskById(manager.getSubtaskId(subtask4).getId());
+        manager.updateStatusSubtask(manager.getSubtaskById(subtask4));
+        manager.updateStatusSubtask(manager.getSubtaskById(subtask4));
+        manager.deleteSubtaskById(manager.getSubtaskById(subtask4).getId());
         //manager.deleteEpicById(epic2);
         for (Task task : manager.getAllTasks()) {
             System.out.format("name : %s | ID : %s | status : %s | \n", task.getName(), task.getId(), task.getStatus());

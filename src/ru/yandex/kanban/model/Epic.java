@@ -10,10 +10,6 @@ public class Epic extends Task {
         super(newName, newDescription);
     }
 
-    public void setValueToHashMap(Subtask subtask) {
-        subtaskList.add(subtask);
-    }
-
     public List<Subtask> getSubtaskList() {
         return subtaskList;
     }
