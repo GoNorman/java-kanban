@@ -5,6 +5,7 @@ import ru.yandex.kanban.model.Subtask;
 import ru.yandex.kanban.model.Task;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -40,9 +41,6 @@ public class Manager {
         List<Subtask> subtaskList = epic.getSubtaskList();
         subtaskList.add(subtask);
         updateStatusEpic(subtask.getEpicId());
-//        if (getEpicById(epic.getId()).getStatus().equals("DONE")) {
-//            epic.setStatus("NEW");
-//        }
         return subtask.getId();
     }
 
@@ -116,9 +114,11 @@ public class Manager {
     public boolean deleteSubtaskById(int id) {
         if (subtaskHashMap.get(id) != null) {
             Epic epic = epicHashMap.get(subtaskHashMap.get(id).getEpicId());
-            epic.getSubtaskList().remove(getSubtaskById(id));
-            allTasksHashMap.remove(getSubtaskById(id).getId());
-            updateStatusEpic(getSubtaskById(id).getEpicId());
+            Subtask subtask = getSubtaskById(id);
+            epic.getSubtaskList().remove(subtask);
+            allTasksHashMap.remove(subtask.getId());
+            updateStatusEpic(subtask.getEpicId());
+            subtaskHashMap.remove(subtask.getId());
             return true;
         }
         return false;
@@ -149,16 +149,15 @@ public class Manager {
 
     public List<Subtask> getSubtaskListFromEpic(int id) {
         if (epicHashMap.get(id) == null) {
-            List<Subtask> subtaskList = new ArrayList<>();
-            return subtaskList;
+            return Collections.emptyList();
         }
         Epic epic = epicHashMap.get(id);
         return epic.getSubtaskList();
     }
 
 
-    public boolean updateStatusTask(Task task) { // Не совсем понял комментарий) Надо объеденить методы updateStatusTask и updateStatusSubtask
-        if (taskHashMap.get(task.getId()) == null) {// в один метод или эти методы надо вызывать в методах updateTask и updateSubtask?)
+    public boolean updateStatusTask(Task task) {
+        if (taskHashMap.get(task.getId()) == null) {
             return false;
         }
         TrackerStatus.changeStatus(task); /// Maybe it's not right and don't use static method from a different class
