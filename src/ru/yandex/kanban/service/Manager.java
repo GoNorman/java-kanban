@@ -124,9 +124,12 @@ public class Manager {
         return false;
     }
 
-    public boolean updateTask(Task task) {
+    public boolean updateTask(Task task, String status) {
         if (taskHashMap.get(task.getId()) != null) {
-            taskHashMap.replace(task.getId(), task);
+            Task taskNew = task;
+            taskNew.setStatus(status);
+            taskHashMap.replace(task.getId(), taskNew);
+            allTasksHashMap.replace(task.getId(), taskNew);
             return true;
         }
         return false;
@@ -139,10 +142,12 @@ public class Manager {
         return false;
     }
 
-    public boolean updateSubtask(Subtask subtask) {
+    public boolean updateSubtask(Subtask subtask, String status) {
         if (subtaskHashMap.get(subtask.getId()) != null) {
-            subtaskHashMap.replace(subtask.getId(), subtask);
-            updateStatusEpic(subtask.getEpicId()); //Check method for Epic. Check subtask of epic.
+            Subtask subtaskNew = subtask;
+            subtaskNew.setStatus(status);
+            subtaskHashMap.replace(subtask.getId(), subtaskNew);
+            updateStatusEpic(subtaskNew.getEpicId()); //Check method for Epic. Check subtask of epic.
         }
         return false;
     }
@@ -153,24 +158,6 @@ public class Manager {
         }
         Epic epic = epicHashMap.get(id);
         return epic.getSubtaskList();
-    }
-
-
-    public boolean updateStatusTask(Task task) {
-        if (taskHashMap.get(task.getId()) == null) {
-            return false;
-        }
-        TrackerStatus.changeStatus(task); /// Maybe it's not right and don't use static method from a different class
-        return true;
-    }
-
-    public boolean updateStatusSubtask(Subtask subtask) {
-        if (subtaskHashMap.get(subtask.getId()) == null) {
-            return false;
-        }
-        TrackerStatus.changeStatus(subtask);
-        updateSubtask(subtask);
-        return true;
     }
 
     private boolean updateStatusEpic(int epicId) {

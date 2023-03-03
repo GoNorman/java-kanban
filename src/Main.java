@@ -13,16 +13,13 @@ public class Main {
         int subTask2 = manager.createNewSubTask(new Subtask("Second Subtask", "it's second subtask for first epic", 2));
         int epic2 = manager.createNewEpic(new Epic("Second Epic", "Create second epic"));
         int subtask3 = manager.createNewSubTask(new Subtask("Third Subtask", "it's third subtask for second epic", 5));
-        manager.updateStatusTask(manager.getTaskById(task1));
-        manager.updateStatusTask(manager.getTaskById(task1));
-        manager.updateStatusTask(manager.getTaskById(task2));
-        manager.updateStatusSubtask(manager.getSubtaskById(subTask1));
-        manager.updateStatusSubtask(manager.getSubtaskById(subTask1));
-        manager.updateStatusSubtask(manager.getSubtaskById(subTask2));
-        manager.updateStatusSubtask(manager.getSubtaskById(subTask2));
+        manager.updateTask(manager.getTaskById(task1), "IN_PROGRESS");
+        manager.updateTask(manager.getTaskById(task1), "DONE");
+        manager.updateTask(manager.getTaskById(task2), "IN_PROGRESS");
+        manager.updateSubtask(manager.getSubtaskById(subTask1), "DONE");
+        manager.updateSubtask(manager.getSubtaskById(subTask2), "DONE");
         int subtask4 = manager.createNewSubTask(new Subtask("Fourth Subtask", "4", 2));
-        manager.updateStatusSubtask(manager.getSubtaskById(subtask4));
-        manager.updateStatusSubtask(manager.getSubtaskById(subtask4));
+        manager.updateSubtask(manager.getSubtaskById(subtask4), "DONE");
         manager.deleteSubtaskById(manager.getSubtaskById(subtask4).getId());
         //manager.deleteEpicById(epic2);
         for (Task task : manager.getAllTasks()) {
