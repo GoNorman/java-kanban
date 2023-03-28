@@ -1,10 +1,9 @@
 package ru.yandex.kanban.model;
-
 public class Task {
     protected int id;
     protected String name;
     protected String description;
-    protected String status;
+    protected Status status;
 
     public Task(String newName, String newDescription) {
         this.name = newName;
@@ -27,11 +26,11 @@ public class Task {
         this.description = description;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
