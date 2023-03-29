@@ -1,4 +1,6 @@
-package ru.yandex.kanban.model;
+package ru.yandex.kanban.service;
+
+import ru.yandex.kanban.model.Task;
 
 import java.util.List;
 

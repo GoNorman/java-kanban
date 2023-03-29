@@ -26,7 +26,6 @@ public class Main {
         for (Task task : manager.getAllTasks()) {
             System.out.format("name : %s | ID : %s | status : %s | \n", task.getName(), task.getId(), task.getStatus());
         }
-        manager.getTask(manager.getTaskById(task1));
         System.out.println(manager.getHistory());
     }
 }

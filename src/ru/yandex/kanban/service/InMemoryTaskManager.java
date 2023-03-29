@@ -2,21 +2,16 @@ package ru.yandex.kanban.service;
 
 import ru.yandex.kanban.model.*;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
     private int id = 0;
-    private HashMap<Integer, Task> taskHashMap = new HashMap<>();
-    private HashMap<Integer, Subtask> subtaskHashMap = new HashMap<>();
-    private HashMap<Integer, Epic> epicHashMap = new HashMap<>();
-    private HashMap<Integer, Task> allTasksHashMap = new HashMap<>();
-    private HashMap<Integer, Task> historyOfTask = new HashMap<>();
+    Map<Integer, Task> taskHashMap = new HashMap<>();
+    Map<Integer, Subtask> subtaskHashMap = new HashMap<>();
+    Map<Integer, Epic> epicHashMap = new HashMap<>();
+    Map<Integer, Task> allTasksHashMap = new HashMap<>();
 
-     InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
+     InMemoryHistoryManager inMemoryHistoryManager = Managers.getDefaultTaskManager();
 
     @Override
     public int createNewTask(Task task) {
@@ -51,17 +46,19 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(int taskId) {
-        checkSizeList();
+        inMemoryHistoryManager.add(allTasksHashMap.get(taskId));
         return taskHashMap.get(taskId);
     }
 
     @Override
     public Epic getEpicById(int epicId) {
+        inMemoryHistoryManager.add(allTasksHashMap.get(epicId));
         return epicHashMap.get(epicId);
     }
 
     @Override
     public Subtask getSubtaskById(int subtaskId) {
+        inMemoryHistoryManager.add(allTasksHashMap.get(subtaskId));
         return subtaskHashMap.get(subtaskId);
     }
 
@@ -210,34 +207,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
         return true;
     }
-
-    public boolean checkSizeList() {
-        if (historyOfTask.size() >= 10) {
-            historyOfTask.remove(0);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public Task getTask(Task task) {
-        inMemoryHistoryManager.add(getTaskById(task.getId()));
-        return getTaskById(task.getId());
-    }
-
-    @Override
-    public Epic getEpic(Epic epic) {
-        inMemoryHistoryManager.add(getEpicById(epic.getId()));
-        return getEpicById(epic.getId());
-    }
-
-    @Override
-    public Subtask getSubtask(Subtask subtask) {
-        inMemoryHistoryManager.add(getSubtaskById(subtask.getId()));
-        return getSubtaskById(subtask.getId());
-    }
-
-    public ArrayList<Task> getHistory() {
-        return (ArrayList<Task>) inMemoryHistoryManager.getHistory();
+    public List getHistory() {
+        return inMemoryHistoryManager.getHistory();
     }
 }

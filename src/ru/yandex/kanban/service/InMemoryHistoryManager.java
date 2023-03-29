@@ -1,6 +1,5 @@
 package ru.yandex.kanban.service;
 
-import ru.yandex.kanban.model.HistoryManager;
 import ru.yandex.kanban.model.Task;
 
 import java.util.ArrayList;
@@ -15,9 +14,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
         if (getHistory().size() >= 10) {
             getHistory().remove(0);
-            for (int i = 1; i <= getHistory().size(); i++) {
-                history.add(task);
-            }
+            history.add(task);
         } else {
             history.add(task);
         }
@@ -26,9 +23,6 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public List<Task> getHistory() {
-        for (Task task : history) {
-            System.out.println(task.getName());
-        }
         return history;
     }
 }
