@@ -11,7 +11,7 @@ public class InMemoryTaskManager implements TaskManager {
     Map<Integer, Epic> epicHashMap = new HashMap<>();
     Map<Integer, Task> allTasksHashMap = new HashMap<>();
 
-     InMemoryHistoryManager inMemoryHistoryManager = Managers.getDefaultTaskManager();
+     InMemoryHistoryManager inMemoryHistoryManager = (InMemoryHistoryManager) Managers.getDefaultTaskManager(); // it is too
 
     @Override
     public int createNewTask(Task task) {
