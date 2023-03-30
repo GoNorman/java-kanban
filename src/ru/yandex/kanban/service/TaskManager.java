@@ -4,8 +4,6 @@ import ru.yandex.kanban.model.Epic;
 import ru.yandex.kanban.model.Status;
 import ru.yandex.kanban.model.Subtask;
 import ru.yandex.kanban.model.Task;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
