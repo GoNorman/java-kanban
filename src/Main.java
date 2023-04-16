@@ -1,10 +1,9 @@
-import ru.yandex.kanban.model.Epic;
-import ru.yandex.kanban.model.Subtask;
-import ru.yandex.kanban.model.Task;
-import ru.yandex.kanban.service.InMemoryTaskManager;
-import ru.yandex.kanban.model.Status;
+import org.w3c.dom.Node;
+import ru.yandex.kanban.service.*;
+import ru.yandex.kanban.model.*;
 
 public class Main {
+
     public static void main(String[] args) {
         InMemoryTaskManager manager = new InMemoryTaskManager();
         int task1 = manager.createNewTask(new Task("First Task", "create first task"));
@@ -22,10 +21,5 @@ public class Main {
         int subtask4 = manager.createNewSubTask(new Subtask("Fourth Subtask", "4", 2));
         manager.updateSubtask(manager.getSubtaskById(subtask4), Status.DONE);
         manager.deleteSubtaskById(manager.getSubtaskById(subtask4).getId());
-        //manager.deleteEpicById(epic2);
-        for (Task task : manager.getAllTasks()) {
-            System.out.format("name : %s | ID : %s | status : %s | \n", task.getName(), task.getId(), task.getStatus());
-        }
-        System.out.println(manager.getHistory());
     }
 }

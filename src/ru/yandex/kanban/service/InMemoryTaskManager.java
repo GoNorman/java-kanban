@@ -61,6 +61,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Subtask getSubtaskById(int subtaskId) {
         Subtask subtask = subtaskHashMap.get(subtaskId);
         historyManager.add(subtask);
+        historyManager.remove(1);
         return subtask;
     }
 
@@ -141,7 +142,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean updateTask(Task task, Status status) {
+    public boolean updateTask(Task task, Status status) { /// 3
         if (taskHashMap.get(task.getId()) != null) {
             Task taskNew = task;
             taskNew.setStatus(status);
