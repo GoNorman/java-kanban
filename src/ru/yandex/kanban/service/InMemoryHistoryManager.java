@@ -15,7 +15,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     Node<Task> first;
     int size = 0;
 
-    public void linkLast(Task task) {
+    public Node linkLast(Task task) {
         final Node<Task> l = last;
         final Node<Task> newNode = new Node<>(l, task, null);
         last = newNode;
@@ -25,6 +25,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             l.next = newNode;
         nodeMap.put(task.getId(), newNode);
         size++;
+        return newNode;
     }
 
     public ArrayList<Task> getTasks() { /// Convert LinkedList to ArrayList
@@ -38,6 +39,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             history.remove(node);
             return true;
         }
+        size--;
         return false;
     }
 
@@ -46,17 +48,11 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (task == null) {
             return false;
         }
-        if (history.get(task.getId()) != null) {/// delete from linkedList (duplicate)
-            
+        if (nodeMap.get(task.getId()) != null) {
+            System.out.println("TRUE"); /// DELETE FROM LinkedList
         }
-        if (getHistory().size() >= 10) {
-            getHistory().remove(0);
-            history.add(task);
-            linkLast(task);
-        } else {
-            linkLast(task);
-            history.add(task);
-        }
+        nodeMap.put(task.getId(), linkLast(task));
+        history.addLast(task);
         return true;
     }
 
@@ -67,6 +63,6 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public List<Task> getHistory() {// Take data from LinkedList and Push to ArrayList
-        return history;
+        return getTasks();
     }
 }
