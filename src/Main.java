@@ -21,5 +21,6 @@ public class Main {
         int subtask4 = manager.createNewSubTask(new Subtask("Fourth Subtask", "4", 2));
         manager.updateSubtask(manager.getSubtaskById(subtask4), Status.DONE);
         manager.deleteSubtaskById(manager.getSubtaskById(subtask4).getId());
+        System.out.println(manager.getHistory());
     }
 }

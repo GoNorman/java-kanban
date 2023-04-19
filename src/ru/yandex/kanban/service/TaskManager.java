@@ -26,4 +26,6 @@ public interface TaskManager {
     boolean updateSubtask(Subtask subtask, Status status);
     List<Subtask> getSubtaskListFromEpic(int id);
     boolean updateStatusEpic(int epicId);
+
+    List getHistory();
 }
