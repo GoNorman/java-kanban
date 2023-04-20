@@ -9,8 +9,9 @@ import java.util.*;
 public class InMemoryHistoryManager implements HistoryManager {
 
 
-    private LinkedList<Task> history = new LinkedList<>(); /// Custom LinkedList
-    private Map<Integer, Node> nodeMap = new HashMap<>(); // нужно стараться везде объявлять переменную типа интерфейса
+    private LinkedList<Task> customLinkedList = new LinkedList<>();
+    // Немного запутался, надо сделать List или LinkedList?
+    private Map<Integer, Node> nodeMap = new HashMap<>();
 
     Node<Task> last;
     Node<Task> first;
@@ -24,6 +25,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             first = newNode;
         else
             l.next = newNode;
+        customLinkedList.add(task);
         nodeMap.put(task.getId(), newNode);
         size++;
         return newNode;
@@ -55,21 +57,26 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     public ArrayList<Task> getTasks() {
-        ArrayList<Task> result = new ArrayList<>(history);
+        ArrayList<Task> result = new ArrayList<>();
+        for(Task task : customLinkedList) {
+            result.add(task);
+        }
+
         return result;
     }
 
     @Override
-    public boolean add(Task task) { /// change with Node
+    public boolean add(Task task) {
         if (task == null) {
             return false;
         }
 
         if (nodeMap.get(task.getId()) != null) {
             remove(task.getId());
-            history.addLast(task);
+            customLinkedList.remove(task);
+            customLinkedList.add(task);
         } else {
-            history.addLast(task);
+            customLinkedList.add(task);
             nodeMap.put(task.getId(), linkLast(task));
         }
         return true;
