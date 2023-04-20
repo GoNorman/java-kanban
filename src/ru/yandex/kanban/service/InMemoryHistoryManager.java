@@ -10,7 +10,8 @@ public class InMemoryHistoryManager implements HistoryManager {
 
 
     private LinkedList<Task> customLinkedList = new LinkedList<>();
-    // Немного запутался, надо сделать List или LinkedList?
+    // Немного запутался, надо сделать List или LinkedList? Те надо писать свою реализацию основаную на List или что-то
+    // готовое использовать?
     private Map<Integer, Node> nodeMap = new HashMap<>();
 
     Node<Task> last;
