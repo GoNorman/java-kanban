@@ -61,7 +61,6 @@ public class InMemoryTaskManager implements TaskManager {
     public Subtask getSubtaskById(int subtaskId) {
         Subtask subtask = subtaskHashMap.get(subtaskId);
         historyManager.add(subtask);
-        historyManager.remove(1);
         return subtask;
     }
 

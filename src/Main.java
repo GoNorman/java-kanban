@@ -2,6 +2,8 @@ import org.w3c.dom.Node;
 import ru.yandex.kanban.service.*;
 import ru.yandex.kanban.model.*;
 
+import java.util.List;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -20,7 +22,8 @@ public class Main {
         manager.updateSubtask(manager.getSubtaskById(subTask2), Status.DONE);
         int subtask4 = manager.createNewSubTask(new Subtask("Fourth Subtask", "4", 2));
         manager.updateSubtask(manager.getSubtaskById(subtask4), Status.DONE);
-        manager.deleteSubtaskById(manager.getSubtaskById(subtask4).getId());
+        //manager.deleteSubtaskById(manager.getSubtaskById(subtask4).getId());
         System.out.println(manager.getHistory());
+
     }
 }

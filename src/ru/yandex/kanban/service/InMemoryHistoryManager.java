@@ -5,6 +5,7 @@ import ru.yandex.kanban.model.Node;
 
 import java.lang.reflect.Array;
 import java.util.*;
+
 public class InMemoryHistoryManager implements HistoryManager {
 
 
@@ -15,7 +16,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     Node<Task> first;
     int size = 0;
 
-    public Node linkLast(Task task) {
+    public Node<Task> linkLast(Task task) {
         final Node<Task> l = last;
         final Node<Task> newNode = new Node<>(l, task, null);
         last = newNode;
@@ -28,19 +29,34 @@ public class InMemoryHistoryManager implements HistoryManager {
         return newNode;
     }
 
-    public ArrayList<Task> getTasks() { /// Convert LinkedList to ArrayList
-        ArrayList<Task> result = new ArrayList<>(history);
-        return result;
+    Task unlink(Node<Task> nodeTask) {
+        final Task element = nodeTask.data;
+        final Node<Task> prev = nodeTask.prev;
+        final Node<Task> next = nodeTask.next;
+
+        if (prev == null) {
+            first = next;
+        } else {
+            prev.next = next;
+            nodeTask.prev = null;
+        }
+
+        if (next == null) {
+            last = prev;
+        } else {
+            next.prev = prev;
+            nodeTask.next = null;
+        }
+
+        nodeTask.data = null;
+        size--;
+
+        return element;
     }
 
-    public boolean removeNode(int ID) {
-        if (nodeMap.get(ID) != null) {
-            final Node<Task> node = nodeMap.get(ID);
-            history.remove(node);
-            return true;
-        }
-        size--;
-        return false;
+    public ArrayList<Task> getTasks() {
+        ArrayList<Task> result = new ArrayList<>(history);
+        return result;
     }
 
     @Override
@@ -48,17 +64,20 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (task == null) {
             return false;
         }
+
         if (nodeMap.get(task.getId()) != null) {
-            System.out.println("TRUE"); /// DELETE FROM LinkedList
+            remove(task.getId());
+            history.addLast(task);
+        } else {
+            history.addLast(task);
+            nodeMap.put(task.getId(), linkLast(task));
         }
-        nodeMap.put(task.getId(), linkLast(task));
-        history.addLast(task);
         return true;
     }
 
     @Override
     public void remove(int id) { // take Node of task and delete task from List with node
-        removeNode(id);
+        unlink(nodeMap.get(id));
     }
 
     @Override

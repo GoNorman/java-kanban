@@ -10,4 +10,5 @@ public class Node<T> {
         this.next = next;
         this.prev = prev;
     }
+
 }
