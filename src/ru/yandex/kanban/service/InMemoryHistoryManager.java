@@ -7,11 +7,6 @@ import java.lang.reflect.Array;
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
-
-
-    private LinkedList<Task> customLinkedList = new LinkedList<>();
-    // Немного запутался, надо сделать List или LinkedList? Те надо писать свою реализацию основаную на List или что-то
-    // готовое использовать?
     private Map<Integer, Node> nodeMap = new HashMap<>();
 
     Node<Task> last;
@@ -26,7 +21,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             first = newNode;
         else
             l.next = newNode;
-        customLinkedList.add(task);
         nodeMap.put(task.getId(), newNode);
         size++;
         return newNode;
@@ -58,9 +52,12 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     public ArrayList<Task> getTasks() {
-        ArrayList<Task> result = new ArrayList<>();
-        for(Task task : customLinkedList) {
-            result.add(task);
+        ArrayList<Task> result = new ArrayList<>(); //Node
+
+        for (Node node : nodeMap.values()) {
+            if (node.data != null) {
+                result.add((Task) node.data);
+            }
         }
 
         return result;
@@ -74,10 +71,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
         if (nodeMap.get(task.getId()) != null) {
             remove(task.getId());
-            customLinkedList.remove(task);
-            customLinkedList.add(task);
         } else {
-            customLinkedList.add(task);
             nodeMap.put(task.getId(), linkLast(task));
         }
         return true;
