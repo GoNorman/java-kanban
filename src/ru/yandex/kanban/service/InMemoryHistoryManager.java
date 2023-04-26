@@ -3,7 +3,6 @@ package ru.yandex.kanban.service;
 import ru.yandex.kanban.model.Task;
 import ru.yandex.kanban.model.Node;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
@@ -53,11 +52,11 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     public ArrayList<Task> getTasks() {
         ArrayList<Task> result = new ArrayList<>(); //Node
+        Node node = nodeMap.get(0).next;
 
-        for (Node node : nodeMap.values()) {
-            if (node.data != null) {
-                result.add((Task) node.data);
-            }
+        while (node != null) {
+            result.add((Task) node.data);
+            node = node.next;
         }
 
         return result;
@@ -71,6 +70,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
         if (nodeMap.get(task.getId()) != null) {
             remove(task.getId());
+            nodeMap.put(task.getId(), linkLast(task));
         } else {
             nodeMap.put(task.getId(), linkLast(task));
         }
