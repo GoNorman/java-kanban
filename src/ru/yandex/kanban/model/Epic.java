@@ -13,4 +13,10 @@ public class Epic extends Task {
     public List<Subtask> getSubtaskList() {
         return subtaskList;
     }
+
+    @Override
+    public String toString() {
+        return "type=epic" + ",id=" + getId() +",name="+ getName() +",description="+
+                getDescription() + ",status=" + getStatus();
+    }
 }

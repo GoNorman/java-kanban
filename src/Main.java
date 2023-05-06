@@ -8,6 +8,7 @@ public class Main {
 
     public static void main(String[] args) {
         InMemoryTaskManager manager = new InMemoryTaskManager();
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
         int task1 = manager.createNewTask(new Task("First Task", "create first task"));
         int task2 = manager.createNewTask(new Task("Second Task", "create second task"));
         int epic1 = manager.createNewEpic(new Epic("First Epic", "create first epic"));
@@ -24,6 +25,6 @@ public class Main {
         manager.updateSubtask(manager.getSubtaskById(subtask4), Status.DONE);
         //manager.deleteSubtaskById(manager.getSubtaskById(subtask4).getId());
         System.out.println(manager.getHistory());
-
+        System.out.println(fileBackedTasksManager.save());
     }
 }
