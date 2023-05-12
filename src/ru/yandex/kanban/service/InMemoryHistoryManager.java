@@ -51,7 +51,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     public ArrayList<Task> getTasks() {
-        ArrayList<Task> result = new ArrayList<>(); //Node
+        ArrayList<Task> result = new ArrayList<>();
         Node node = first;
 
         while (node != null) {
@@ -83,7 +83,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
-    public List<Task> getHistory() {// Take data from LinkedList and Push to ArrayList
+    public List<Task> getHistory() {
         return getTasks();
     }
 }

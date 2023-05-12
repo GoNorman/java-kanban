@@ -1,38 +1,44 @@
 package ru.yandex.kanban.service;
-import ru.yandex.kanban.model.Epic;
-import ru.yandex.kanban.model.Subtask;
-import ru.yandex.kanban.model.Task;
+import ru.yandex.kanban.model.*;
 
+import javax.swing.*;
 import java.io.*;
+import java.util.List;
 
-public class FileBackedTasksManager extends InMemoryTaskManager implements TaskManager {
+public class FileBackedTasksManager extends InMemoryTaskManager {
 
-    public static void main(String[] args) throws IOException {
-
-    }
+    static protected String fileName = "src/resources/data.csv";
 
     public boolean save() {
-        try (Writer file = new FileWriter("src/ru/yandex/kanban/file/data.csv")) {
+        try (Writer file = new FileWriter(fileName)) {
             file.append("id,type,name,description,status,epic\n"); /// Create the field
             for (Task task : allTasksHashMap.values()) {
                 file.append(task.toString()+"\n");
             }
-        } catch (IOException ex) {
-            ex.getMessage();
+            file.append("\n");
+            if (!getHistory().isEmpty()) {
+                List<Task> taskList = (List<Task>) super.getHistory();
+                for (Task task : taskList) {
+                    file.append(task.getId()+";");
+                }
+             }
+        } catch (ManagerSaveException mse) {
+            System.out.println(mse.getMessage());
             return false;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-
         return true;
     }
 
-    public boolean readFileTask() throws IOException {
-        try(Reader file = new FileReader("src/ru/yandex/kanban/file/data.csv")) {
+    public static boolean readFileTask() { //// Create a new object "FileBackedTasksManager"
+        try(Reader file = new FileReader(fileName)) {
             BufferedReader br = new BufferedReader(file);
-            while(br.ready()) { /// как пропустить первую строку id,type,name,description,status,epic?
+            while (br.ready()) {
                 System.out.println(br.readLine());
             }
         } catch (IOException exception) {
-            exception.getMessage();
+            System.out.println(exception.getMessage());
         }
         return true;
     }
@@ -57,4 +63,59 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         save();
         return subtask.getId();
     }
+
+    @Override
+    public Task getTaskById(int taskId) {
+        save();
+        return super.getTaskById(taskId);
+    }
+
+    @Override
+    public Epic getEpicById(int epicId) {
+        save();
+        return super.getEpicById(epicId);
+    }
+
+    @Override
+    public Subtask getSubtaskById(int subtaskId) {
+        save();
+        return super.getSubtaskById(subtaskId);
+    }
+
+    @Override
+    public boolean updateTask(Task task, Status status) {
+        save();
+        return super.updateTask(task, status);
+    }
+
+    @Override
+    public boolean updateEpic(Epic epic) {
+        save();
+        return super.updateEpic(epic);
+    }
+
+    @Override
+    public boolean updateSubtask(Subtask subtask, Status status) {
+        save();
+        return super.updateSubtask(subtask, status);
+    }
+
+    @Override
+    public boolean deleteTaskById(int id) {
+        save();
+        return super.deleteTaskById(id);
+    }
+
+    @Override
+    public boolean deleteEpicById(int id) {
+        save();
+        return super.deleteEpicById(id);
+    }
+
+    @Override
+    public boolean deleteSubtaskById(int id) {
+        save();
+        return super.deleteSubtaskById(id);
+    }
+
 }
