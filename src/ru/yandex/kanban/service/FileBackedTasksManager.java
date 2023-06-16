@@ -1,46 +1,56 @@
 package ru.yandex.kanban.service;
 import ru.yandex.kanban.model.*;
 
-import javax.swing.*;
 import java.io.*;
 import java.util.List;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
 
-    static protected String fileName = "src/resources/data.csv";
+    static protected String fileName = "resources/data.csv";
 
     public boolean save() {
         try (Writer file = new FileWriter(fileName)) {
             file.append("id,type,name,description,status,epic\n"); /// Create the field
             for (Task task : allTasksHashMap.values()) {
-                file.append(task.toString()+"\n");
+                file.append(task.toString() + "\n");
             }
-            file.append("\n");
+           file.append("\n");
             if (!getHistory().isEmpty()) {
                 List<Task> taskList = (List<Task>) super.getHistory();
                 for (Task task : taskList) {
-                    file.append(task.getId()+";");
+                    file.append(task.getId() + ",");
                 }
-             }
-        } catch (ManagerSaveException mse) {
-            System.out.println(mse.getMessage());
-            return false;
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         return true;
     }
 
-    public static boolean readFileTask() { //// Create a new object "FileBackedTasksManager"
-        try(Reader file = new FileReader(fileName)) {
-            BufferedReader br = new BufferedReader(file);
-            while (br.ready()) {
-                System.out.println(br.readLine());
+
+    public static FileBackedTasksManager loadFromFile() { //// Create a new object "FileBackedTasksManager"
+        FileBackedTasksManager fileBackedTasksManager = null;
+        try(Reader files = new FileReader(fileName)) {
+            BufferedReader br = new BufferedReader(files);
+            String line = "";
+            boolean historyWatch = false;
+            br.readLine(); // skip string "id,type,name,description,status,epic"
+            while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) {
+                    historyWatch = true;
+                    continue;
+                }
+                String[] data = line.split(",");
+                if (!historyWatch) {
+                    // Что значть загрузить данные? Нам надо методы createNewTask заново собрать таски?
+                } else {
+
+                }
             }
         } catch (IOException exception) {
             System.out.println(exception.getMessage());
         }
-        return true;
+        return fileBackedTasksManager;
     }
 
     @Override
@@ -66,56 +76,65 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     @Override
     public Task getTaskById(int taskId) {
+        Task task = super.getTaskById(taskId);
         save();
-        return super.getTaskById(taskId);
+        return task;
     }
 
     @Override
     public Epic getEpicById(int epicId) {
+        Epic epic = super.getEpicById(epicId);
         save();
-        return super.getEpicById(epicId);
+        return epic;
     }
 
     @Override
     public Subtask getSubtaskById(int subtaskId) {
+        Subtask subtask = super.getSubtaskById(subtaskId);
         save();
-        return super.getSubtaskById(subtaskId);
+        return subtask;
     }
 
     @Override
     public boolean updateTask(Task task, Status status) {
+        boolean res = super.updateTask(task, status);
         save();
-        return super.updateTask(task, status);
+        return res;
     }
 
     @Override
     public boolean updateEpic(Epic epic) {
+        boolean res = super.updateEpic(epic);
         save();
-        return super.updateEpic(epic);
+        return res;
     }
 
     @Override
     public boolean updateSubtask(Subtask subtask, Status status) {
+        boolean res = super.updateSubtask(subtask, status);
         save();
-        return super.updateSubtask(subtask, status);
+        return res;
     }
 
     @Override
     public boolean deleteTaskById(int id) {
+        boolean res = super.deleteTaskById(id);
         save();
-        return super.deleteTaskById(id);
+        return res;
     }
 
     @Override
     public boolean deleteEpicById(int id) {
+        boolean res = super.deleteEpicById(id);
         save();
-        return super.deleteEpicById(id);
+        return res;
     }
 
     @Override
     public boolean deleteSubtaskById(int id) {
+        boolean res = super.deleteSubtaskById(id);
         save();
-        return super.deleteSubtaskById(id);
+        return res;
     }
 
 }

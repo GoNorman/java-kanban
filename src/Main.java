@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.List;
 
 public class Main {
-
     public static void main(String[] args) throws IOException {
         InMemoryTaskManager manager = new InMemoryTaskManager();
         FileBackedTasksManager manager1 = new FileBackedTasksManager();
@@ -26,6 +25,6 @@ public class Main {
         //manager1.updateSubtask(manager1.getSubtaskById(subtask4), Status.DONE);
         //manager1.deleteSubtaskById(manager.getSubtaskById(subtask4).getId());
         //System.out.println(manager1.getHistory());
-        manager1.readFileTask();
+        FileBackedTasksManager.loadFromFile();
     }
 }
