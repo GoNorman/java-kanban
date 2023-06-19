@@ -4,6 +4,8 @@ import ru.yandex.kanban.model.*;
 import java.io.*;
 import java.util.List;
 
+import static ru.yandex.kanban.model.Status.*;
+
 public class FileBackedTasksManager extends InMemoryTaskManager {
 
     static protected String fileName = "resources/data.csv";
@@ -22,14 +24,14 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ManagerSaveException(e);
         }
         return true;
     }
 
 
     public static FileBackedTasksManager loadFromFile() { //// Create a new object "FileBackedTasksManager"
-        FileBackedTasksManager fileBackedTasksManager = null;
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
         try(Reader files = new FileReader(fileName)) {
             BufferedReader br = new BufferedReader(files);
             String line = "";
@@ -42,13 +44,30 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 }
                 String[] data = line.split(",");
                 if (!historyWatch) {
-                    // Что значть загрузить данные? Нам надо методы createNewTask заново собрать таски?
+                    if (Tasks.TASK == Tasks.valueOf(data[1])) {
+                        Task task = new Task(data[2], data[3]);
+                        task.setId(Integer.parseInt(data[0]));
+                        task.setStatus(Status.valueOf(data[4]));
+                        fileBackedTasksManager.createNewTask(task);
+                    } else if (Tasks.EPIC == Tasks.valueOf(data[1])) {
+                        Epic epic = new Epic(data[2], data[3]);
+                        epic.setId(Integer.parseInt(data[0]));
+                        epic.setStatus(Status.valueOf(data[4]));
+                        fileBackedTasksManager.createNewEpic(epic);
+                    } else if (Tasks.SUBTASK == Tasks.valueOf(data[1])) {
+                        Subtask subtask = new Subtask(data[2], data[3], Integer.parseInt(data[5]));
+                        subtask.setId(Integer.parseInt(data[0]));
+                        subtask.setStatus(Status.valueOf(data[4]));
+                        fileBackedTasksManager.createNewSubTask(subtask);
+                    }
                 } else {
-
+                    for (int i = 0; i < data.length; i++) {
+                        /// как лучше реализовать запись истории?
+                    }
                 }
             }
         } catch (IOException exception) {
-            System.out.println(exception.getMessage());
+            throw new ManagerSaveException(exception);
         }
         return fileBackedTasksManager;
     }

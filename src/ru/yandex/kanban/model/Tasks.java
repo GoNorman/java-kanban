@@ -1,6 +1,6 @@
 package ru.yandex.kanban.model;
 
-enum Tasks {
+public enum Tasks {
     TASK,
     EPIC,
     SUBTASK
