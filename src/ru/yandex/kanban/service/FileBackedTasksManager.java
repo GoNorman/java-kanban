@@ -12,7 +12,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     public boolean save() {
         try (Writer file = new FileWriter(fileName)) {
-            file.append("id,type,name,description,status,epic\n"); /// Create the field
+            file.append("id,type,name,description,status,epic\n");
             for (Task task : allTasksHashMap.values()) {
                 file.append(task.toString() + "\n");
             }
@@ -30,13 +30,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
 
-    public static FileBackedTasksManager loadFromFile() { //// Create a new object "FileBackedTasksManager"
+    public static FileBackedTasksManager loadFromFile() {
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
         try(Reader files = new FileReader(fileName)) {
             BufferedReader br = new BufferedReader(files);
             String line = "";
             boolean historyWatch = false;
-            br.readLine(); // skip string "id,type,name,description,status,epic"
+            br.readLine();
             while ((line = br.readLine()) != null) {
                 if (line.trim().isEmpty()) {
                     historyWatch = true;
@@ -44,25 +44,32 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 }
                 String[] data = line.split(",");
                 if (!historyWatch) {
-                    if (Tasks.TASK == Tasks.valueOf(data[1])) {
-                        Task task = new Task(data[2], data[3]);
-                        task.setId(Integer.parseInt(data[0]));
-                        task.setStatus(Status.valueOf(data[4]));
-                        fileBackedTasksManager.createNewTask(task);
-                    } else if (Tasks.EPIC == Tasks.valueOf(data[1])) {
-                        Epic epic = new Epic(data[2], data[3]);
-                        epic.setId(Integer.parseInt(data[0]));
-                        epic.setStatus(Status.valueOf(data[4]));
+                        int id = Integer.parseInt(data[0]);
+                        String typeOfTask = data[1];
+                        String name = data[2];
+                        String description = data[3];
+                        String status = data[4];
+                    if (Tasks.TASK == Tasks.valueOf(typeOfTask)) {
+                        Task task = new Task(name, description);
+                        task.setId(id);
+                        fileBackedTasksManager.createNewTask(task); // деффолтно ставиться NEW
+                        task.setStatus(Status.valueOf(status));//тут берем статус из файла
+                    } else if (Tasks.EPIC == Tasks.valueOf(typeOfTask)) {
+                        Epic epic = new Epic(name, description);
+                        epic.setId(id);
                         fileBackedTasksManager.createNewEpic(epic);
-                    } else if (Tasks.SUBTASK == Tasks.valueOf(data[1])) {
-                        Subtask subtask = new Subtask(data[2], data[3], Integer.parseInt(data[5]));
-                        subtask.setId(Integer.parseInt(data[0]));
-                        subtask.setStatus(Status.valueOf(data[4]));
-                        fileBackedTasksManager.createNewSubTask(subtask);
+                        epic.setStatus(Status.valueOf(status));
+                    } else if (Tasks.SUBTASK == Tasks.valueOf(typeOfTask)) {
+                        int epicId = Integer.parseInt(data[5]); // чтобы не выйти за пределы во время чтения
+                        Subtask subtask = new Subtask(name, description, epicId);
+                        subtask.setId(id);
+                        fileBackedTasksManager.createNewSubTask(subtask);// в самом методе идет линковка к эпику
+                        subtask.setStatus(Status.valueOf(status));
                     }
                 } else {
                     for (int i = 0; i < data.length; i++) {
-                        /// как лучше реализовать запись истории?
+                        Task task = fileBackedTasksManager.allTasksHashMap.get(i);
+                        fileBackedTasksManager.historyManager.add(task);
                     }
                 }
             }

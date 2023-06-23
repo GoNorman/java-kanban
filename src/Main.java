@@ -25,6 +25,6 @@ public class Main {
         //manager1.updateSubtask(manager1.getSubtaskById(subtask4), Status.DONE);
         //manager1.deleteSubtaskById(manager.getSubtaskById(subtask4).getId());
         //System.out.println(manager1.getHistory());
-        FileBackedTasksManager.loadFromFile();
+        manager1.loadFromFile();
     }
 }

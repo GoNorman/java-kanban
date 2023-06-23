@@ -4,13 +4,7 @@ import java.io.IOException;
 
 public class ManagerSaveException extends RuntimeException {
 
-    private String message;
-    public ManagerSaveException(IOException message) {
+    public ManagerSaveException(Exception message) {
         super(message);
-    }
-
-    @Override
-    public String getMessage() {
-        return message;
     }
 }
